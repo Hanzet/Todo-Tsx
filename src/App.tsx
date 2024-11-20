@@ -1,40 +1,44 @@
-import React from "react"
-import { Todos } from "./components/Todos"
+import { Copyright } from './components/Copyright'
+import { Footer } from './components/Footer'
+import { Header } from './components/Header'
+import { Todos } from './components/Todos'
+import { useTodos } from './hooks/useTodos'
 
-const mockTodos = [
-  {
-    id: 1,
-    title: "Learn React",
-    completed: true,
-  },
-  {
-    id: 2,
-    title: "Learn TypeScript",
-    completed: false,
-  },
-  {
-    id: 3,
-    title: "Learn JSON",
-    completed: false,
-  },
-]
-
-const App: React.FC = (): JSX.Element => {
-  const [todos, setTodos] = React.useState(mockTodos)
-
-  const handleRemove = (id: string): void => {
-    const newTodos = todos.filter(todo => todo.id !== id)
-    setTodos(newTodos)
-  }
+const App: React.FC = () => {
+  const {
+    activeCount,
+    completedCount,
+    filterSelected,
+    handleClearCompleted,
+    handleCompleted,
+    handleFilterChange,
+    handleRemove,
+    handleSave,
+    handleUpdateTitle,
+    todos: filteredTodos
+  } = useTodos()
 
   return (
-    <div className="todoapp">
-      <Todos
-        onRemoveTodo={handleRemove}
-        todos={todos}
-      />
-    </div>
+    <>
+      <div className='todoapp'>
+        <Header saveTodo={handleSave} />
+        <Todos
+          removeTodo={handleRemove}
+          setCompleted={handleCompleted}
+          setTitle={handleUpdateTitle}
+          todos={filteredTodos}
+        />
+        <Footer
+          handleFilterChange={handleFilterChange}
+          completedCount={completedCount}
+          activeCount={activeCount}
+          filterSelected={filterSelected}
+          onClearCompleted={handleClearCompleted}
+        />
+      </div>
+      <Copyright />
+    </>
   )
 }
 
-export default App 
+export default App
